@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ValidationResult } from "../types";
 
 const EmailValidator = () => {
@@ -18,13 +18,11 @@ const EmailValidator = () => {
 
 		try {
 			const url = `https://app.snapvalid.com/api/v1/verify?apikey=${API_KEY}&email=${email}`;
-			console.log("Request URL:", url);
 			const response = await fetch(url, options);
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 			const data: ValidationResult = await response.json();
-			console.log("Full API Response:", data);
 			setValidationResult(data);
 		} catch (error) {
 			console.error("Error validating email:", error);
@@ -38,8 +36,8 @@ const EmailValidator = () => {
 				disposable: 0,
 				spamtrap: 0,
 				success: false,
-				result: "invalid",
-				message: "Validation failed",
+				result: "",
+				message: "",
 			});
 		}
 	};
