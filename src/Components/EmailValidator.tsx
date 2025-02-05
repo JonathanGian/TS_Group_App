@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { ValidationResult } from "../types";
 
 const EmailValidator = () => {
@@ -45,7 +45,7 @@ const EmailValidator = () => {
 	};
 
 	return (
-		<div>
+		<div className="email-validator">
 			<h1>Email Validator</h1>
 			<input
 				type="email"
@@ -55,23 +55,21 @@ const EmailValidator = () => {
 			/>
 			<button onClick={validateEmail}>Validate</button>
 			{validationResult && (
-				<div>
+				<div className="validation-result">
 					<h2>Validation Result:</h2>
 					<p>{validationResult.success ? "Valid Email" : "Invalid Email"}</p>
 					<p>{validationResult.message}</p>
 					<p>Email: {validationResult.email}</p>
-					{validationResult.success && (
-						<div>
-							<p>User: {validationResult.user}</p>
-							<p>Domain: {validationResult.domain}</p>
-							<p>Accept All: {validationResult.accept_all}</p>
-							<p>Role: {validationResult.role}</p>
-							<p>Free Email: {validationResult.free_email}</p>
-							<p>Disposable: {validationResult.disposable}</p>
-							<p>Spamtrap: {validationResult.spamtrap}</p>
-							<p>Result: {validationResult.result}</p>
-						</div>
-					)}
+					<div>
+						<p>User: {validationResult.user}</p>
+						<p>Domain: {validationResult.domain}</p>
+						<p>Accept All: {validationResult.accept_all}</p>
+						<p>Role: {validationResult.role}</p>
+						<p>Free Email: {validationResult.free_email}</p>
+						<p>Disposable: {validationResult.disposable}</p>
+						<p>Spamtrap: {validationResult.spamtrap}</p>
+						<p>Result: {validationResult.result}</p>
+					</div>
 				</div>
 			)}
 		</div>
