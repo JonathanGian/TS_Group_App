@@ -4,8 +4,7 @@ import { ValidationResult } from "../types";
 const EmailValidator = () => {
 	const [email, setEmail] = useState("");
 	const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
-	const API_KEY = "yjxf7CsSCR6xJxz9lloazDwwM6lHGOmgoa106vAIkIoyIstqPDtGeFQrfU8I";
-
+	const API_KEY = import.meta.env.VITE_API_KEY;
 	const validateEmail = async () => {
 		if (!email) return;
 
