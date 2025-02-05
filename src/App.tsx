@@ -1,16 +1,13 @@
-import { RouterProvider } from "react-router-dom";
-import createRoutes from "./Routes/appRoutes.tsx";
+import React from "react";
+import EmailValidator from "./Components/EmailValidator";
 
 function App() {
-  
-
-  const router = createRoutes();
-
-  return (
-    <RouterProvider
-      router={router}
-    />
-  );
+	return (
+		<div className="App">
+			<h1>Email Validation App</h1>
+			<EmailValidator />
+		</div>
+	);
 }
 
 export default App;
