@@ -1,15 +1,17 @@
 {
   "name": "vite-project",
   "private": true,
+  "proxy": "https://app.snapvalid.com/",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --force",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@api/snapvalid": "file:.api/apis/snapvalid",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@fontsource/roboto": "^5.1.1",
@@ -25,6 +27,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "@types/node": "^22.13.1",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react-swc": "^3.5.0",

@@ -1,0 +1,55 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Bulk Validation",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://app.snapvalid.com"
+    }
+  ],
+  "paths": {
+    "/api/upload-bulk-emails": {
+      "post": {
+        "tags": [
+          "default"
+        ],
+        "summary": "New Request",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "api_key",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": "TYdDSzWPrar12XUX4bZRRwLJFIcutSE44JIpwpCXduCIYqwbtHcO62LQ0e3P"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    }
+  }
+}

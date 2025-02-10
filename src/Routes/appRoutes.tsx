@@ -1,17 +1,20 @@
-import { createBrowserRouter } from "react-router-dom";
-import TestPage from "../Pages/TestPage/TestPage";
+import { createBrowserRouter, Outlet } from "react-router-dom";
 import ErrorPage from "../Pages/ErrorPage";
+import EmailValidator from "../Components/EmailValidator";
+import BulkEmailUploader from "../Components/BulkEmailUploader/BulkEmailUploder";
+import BulkStatus from "../Components/BulkStatus";
 
 const createRoutes = () => {
   return createBrowserRouter(
     [
       {
         path: "/",
-        element: <TestPage />,
+        element: <Outlet />,
         errorElement: <ErrorPage />,
         children: [
-          {/* new routes go here: 
-            path: "/test", element: <TestPage />  */},
+          { path: "/single", element: <EmailValidator /> },
+          { path: "/batch", element: <BulkEmailUploader /> },
+          { path: "/status", element: <BulkStatus /> },
        
         ],
       },
