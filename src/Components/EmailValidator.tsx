@@ -5,9 +5,11 @@ const EmailValidator = () => {
 	const [email, setEmail] = useState("");
 	const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
 	const API_KEY = import.meta.env.VITE_API_KEY;
+
+
 	const validateEmail = async () => {
 		if (!email) return;
-
+		console.log("API_KEY", API_KEY);
 		const options = {
 			method: "GET",
 			headers: {
@@ -18,10 +20,12 @@ const EmailValidator = () => {
 		try {
 			const url = `https://app.snapvalid.com/api/v1/verify?apikey=${API_KEY}&email=${email}`;
 			const response = await fetch(url, options);
+			console.log(response)
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 			const data: ValidationResult = await response.json();
+			console.log(data)
 			setValidationResult(data);
 		} catch (error) {
 			console.error("Error validating email:", error);
