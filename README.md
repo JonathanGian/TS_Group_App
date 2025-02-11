@@ -1,3 +1,12 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=JonathanGian_TS_Group_App&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=JonathanGian_TS_Group_App)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=JonathanGian_TS_Group_App&metric=bugs)](https://sonarcloud.io/summary/new_code?id=JonathanGian_TS_Group_App)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=JonathanGian_TS_Group_App&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=JonathanGian_TS_Group_App)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=JonathanGian_TS_Group_App&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=JonathanGian_TS_Group_App)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=JonathanGian_TS_Group_App&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=JonathanGian_TS_Group_App)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=JonathanGian_TS_Group_App&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=JonathanGian_TS_Group_App)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=JonathanGian_TS_Group_App&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=JonathanGian_TS_Group_App)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=JonathanGian_TS_Group_App&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=JonathanGian_TS_Group_App)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=JonathanGian_TS_Group_App&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=JonathanGian_TS_Group_App)
 
 # React + TypeScript + Vite
 
