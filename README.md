@@ -58,5 +58,3 @@ export default tseslint.config({
   },
 });
 ```
-
-## Checking Sonalcloud
