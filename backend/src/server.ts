@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import pool from "./database";
 import authRoutes from "./routes/authRoutes";
+import emailRoutes from "./routes/emailRoutes";
+
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5005;
@@ -18,6 +20,9 @@ app.use("/api/auth", authRoutes)
 app.get("/", (req, res) => {
     res.send("Server is running");
 })
+// Email Verification Routes
+app.use("/api/emails", emailRoutes)
+
 // Database Connection Test Route
 app.get("/test-db", async (req, res) => {
     
