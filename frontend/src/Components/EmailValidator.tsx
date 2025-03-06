@@ -1,6 +1,12 @@
 import { useState } from "react";
-import { ValidationResult } from "../types";
 
+interface ImportMeta {
+  env: {
+	VITE_API_KEY: string;
+  };
+}
+import { ValidationResult } from "../types";
+import React from "react";
 const EmailValidator = () => {
 	const [email, setEmail] = useState("");
 	const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
