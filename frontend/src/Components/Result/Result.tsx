@@ -2,7 +2,7 @@ import React from "react";
 import { useValidation } from "../../Contexts/ValidationContext";
 
 const Result: React.FC = () => {
-	const { validationResult } = useValidation();
+	const { validationResult, bulkStatus } = useValidation();
 
 	return (
 		<div className="result">
@@ -23,6 +23,12 @@ const Result: React.FC = () => {
 						<p>Spamtrap: {validationResult.spamtrap}</p>
 						<p>Result: {validationResult.result}</p>
 					</div>
+				</div>
+			)}
+			{bulkStatus && (
+				<div className="bulk-status">
+					<h2>Bulk Status:</h2>
+					<pre>{JSON.stringify(bulkStatus, null, 2)}</pre>
 				</div>
 			)}
 		</div>

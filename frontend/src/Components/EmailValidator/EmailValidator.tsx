@@ -9,7 +9,6 @@ const EmailValidator = () => {
 
 	const validateEmail = async () => {
 		if (!email) return;
-		console.log("API_KEY", API_KEY);
 		const options = {
 			method: "GET",
 			headers: {
