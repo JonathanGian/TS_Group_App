@@ -1,5 +1,5 @@
 import React from "react";
-import EmailValidator from "../EmailValidator";
+import EmailValidator from "../EmailValidator/EmailValidator";
 import BulkEmailUploader from "../BulkEmailUploader/BulkEmailUploder";
 import Result from "../Result/Result";
 
