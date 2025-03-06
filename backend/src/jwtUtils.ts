@@ -5,6 +5,9 @@ dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET || "super_secret_key";
 
+interface AuthRequest extends Request {
+    user?: any;
+}
 export const generateToken = (userId: number) =>{
     return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: "1h" }); // Expires in 1 hour
 }
