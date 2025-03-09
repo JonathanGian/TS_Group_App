@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import React, { useState, useImperativeHandle, forwardRef, useEffect, useRef } from "react";
 import { useValidation } from "../../Contexts/ValidationContext";
 
