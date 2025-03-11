@@ -1,25 +1,29 @@
-import { createBrowserRouter, Outlet } from "react-router-dom";
-import ErrorPage from "../Pages/ErrorPage";
-import EmailValidator from "../Components/EmailValidator";
-import BulkEmailUploader from "../Components/BulkEmailUploader/BulkEmailUploder";
-import BulkStatus from "../Components/BulkStatus";
+import React from "react";
+import { createBrowserRouter, RouteObject } from "react-router-dom";
+import Login from "../Components/Login/Login";
+import Overlay from "../Components/Overlay/Overlay";
+import { useAuth } from "../Contexts/AuthContext";
 
-const createRoutes = () => {
-  return createBrowserRouter(
-    [
-      {
-        path: "/",
-        element: <Outlet />,
-        errorElement: <ErrorPage />,
-        children: [
-          { path: "/single", element: <EmailValidator /> },
-          { path: "/batch", element: <BulkEmailUploader /> },
-          { path: "/status", element: <BulkStatus /> },
-       
-        ],
-      },
-    ],
-  );
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+	const { loggedIn } = useAuth();
+	return loggedIn ? children : <Login />;
 };
+
+const routes: RouteObject[] = [
+	{
+		path: "/",
+		element: (
+			<ProtectedRoute>
+				<Overlay />
+			</ProtectedRoute>
+		),
+	},
+	{
+		path: "/login",
+		element: <Login />,
+	},
+];
+
+const createRoutes = () => createBrowserRouter(routes);
 
 export default createRoutes;
