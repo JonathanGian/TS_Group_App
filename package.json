@@ -1,11 +1,43 @@
 {
-  "dependencies": {
-    "axios": "^1.8.1",
-    "bcryptjs": "^3.0.2",
-    "jsonwebtoken": "^9.0.2"
+  "name": "ts_group_app",
+  "version": "1.0.0",
+  "main": "eslint.config.js",
+  "scripts": {
+    "install:frontend": "cd frontend && npm install",
+    "install:backend": "cd backend && npm install",
+    "install:all": "concurrently \"npm run install:frontend\" \"npm run install:backend\"",
+    "setup:backend-db": "cd backend && mysql < createStatement.sql",
+    "start:frontend": "cd frontend && npm run dev",
+    "start:backend": "cd backend && npm run dev",
+    "start:all": "concurrently \"npm run start:frontend\" \"npm run start:backend\""
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JonathanGian/TS_Group_App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "authors": [
+    {
+      "name": "Jonathan Gian",
+      "github": ""
+    },
+    {
+      "name": "Vladimir Beliakov",
+      "github": "https://github.com/Ermegilius"
+    },
+    {
+      "name": "Puja Kumari",
+      "github": "https://github.com/Pujakumari1511"
+    }
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JonathanGian/TS_Group_App/issues"
+  },
+  "homepage": "https://github.com/JonathanGian/TS_Group_App#readme",
+  "description": "",
   "devDependencies": {
-    "@types/bcryptjs": "^2.4.6",
-    "@types/jsonwebtoken": "^9.0.9"
+    "concurrently": "^9.1.2"
   }
 }
