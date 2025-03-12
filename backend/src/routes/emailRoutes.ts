@@ -2,7 +2,7 @@ import express from "express";
 import axios from "axios";
 import pool from "../database";
 import { verifyToken } from "../jwtUtils";
-import e from "express";
+
 
 const router = express.Router();
 
