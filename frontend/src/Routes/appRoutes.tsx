@@ -4,6 +4,9 @@ import Login from "../Components/Login/Login";
 import Overlay from "../Components/Overlay/Overlay";
 import { useAuth } from "../Contexts/AuthContext";
 import Register from "../Components/Register/Register";
+import UploadEmails from "../Components/Font-BackComponents/UploadEmails";
+import { DynamicTable } from "../Components/Font-BackComponents/DynamicTable";
+import EmailStatus from "../Components/Font-BackComponents/EmailStatus";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 	const { loggedIn } = useAuth();
@@ -21,12 +24,32 @@ const routes: RouteObject[] = [
 	},
 	{
 		path: "/login",
-		element: <Login />,
+		element: (
+			<ProtectedRoute>
+			<Login />
+			</ProtectedRoute>
+		)
 	},
 	{
 		path: "/register",
 		element: <Register />,
-	},
+	},{
+		path: "/upload-emails",
+		
+		element: (
+			<ProtectedRoute>
+		<UploadEmails />
+			</ProtectedRoute>
+		)
+	},{
+		path: "/status",
+		element: (
+			<ProtectedRoute>		
+			<EmailStatus />
+			</ProtectedRoute>
+		)
+	}
+
 ];
 
 const createRoutes = () => createBrowserRouter(routes);
