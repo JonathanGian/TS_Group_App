@@ -3,6 +3,7 @@ import { createBrowserRouter, RouteObject } from "react-router-dom";
 import Login from "../Components/Login/Login";
 import Overlay from "../Components/Overlay/Overlay";
 import { useAuth } from "../Contexts/AuthContext";
+import Register from "../Components/Register/Register";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 	const { loggedIn } = useAuth();
@@ -21,6 +22,10 @@ const routes: RouteObject[] = [
 	{
 		path: "/login",
 		element: <Login />,
+	},
+	{
+		path: "/register",
+		element: <Register />,
 	},
 ];
 

@@ -8,8 +8,12 @@ body {
 }
 
 .login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 450px;
-    height: 270px;
+    max-height: 400px;
     background: #c0e5ee;
     border-radius: 20px;
     border: 2px solid #15abd1;
@@ -34,15 +38,29 @@ h1 {
 .login-button {
     background: #0394b8;
     font-size: larger;
-    padding: 10px;
+    padding: 5px;
     border-radius: 8px;
-    display: inline-block;
-    margin: 30px 10px 10px 0;
     text-align: center;
     vertical-align: middle;
     width: fit-content;
 }
-
+.register-button{
+    background: darkgray;
+    font-size: larger;
+    padding: 5px;
+    border-radius: 8px;
+   
+    text-align: center;
+    vertical-align: middle;
+    width: fit-content;
+}
+.button-group{
+    width: 45%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
 p {
     text-align: center;
     margin: 30px;
