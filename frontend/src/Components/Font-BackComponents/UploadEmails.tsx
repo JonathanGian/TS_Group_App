@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Navigation from "../Navigation";
-import { Container, TextField, Button, Typography, Grid, Box } from "@mui/material";
+import "./UploadEmails.css"
 
 const UploadEmails: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -46,6 +46,7 @@ const UploadEmails: React.FC = () => {
 
   return (
     <>
+    <Navigation />
     <div>
    <h1>Upload Emails</h1>
       <form onSubmit={handleSubmit}>

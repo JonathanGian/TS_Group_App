@@ -1,28 +1,47 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+// src/Contexts/AuthContext.tsx
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 interface AuthContextType {
-	loggedIn: boolean;
-	login: () => void;
-	logout: () => void;
+  loggedIn: boolean;
+  login: () => void;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-	const [loggedIn, setLoggedIn] = useState(false);
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
-	const login = () => setLoggedIn(true);
-	const logout = () => setLoggedIn(false);
+  // Check for a token in localStorage on component mount
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setLoggedIn(true);
+    }
+  }, []);
 
-	return (
-		<AuthContext.Provider value={{ loggedIn, login, logout }}>{children}</AuthContext.Provider>
-	);
+  const login = () => {
+    // Perform login logic here (e.g., token verification) and update state
+    setLoggedIn(true);
+  };
+
+  const logout = () => {
+    // Remove token and update state
+    localStorage.removeItem("token");
+    setLoggedIn(false);
+  };
+
+  return (
+    <AuthContext.Provider value={{ loggedIn, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-export const useAuth = () => {
-	const context = useContext(AuthContext);
-	if (!context) {
-		throw new Error("useAuth must be used within an AuthProvider");
-	}
-	return context;
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };

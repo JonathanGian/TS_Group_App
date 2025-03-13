@@ -23,20 +23,6 @@ app.get("/", (req, res) => {
 // Email Verification Routes
 app.use("/api/emails", emailRoutes)
 
-// Database Connection Test Route
-app.get("/test-db", async (req, res) => {
-    
-    try {
-        const conn = await pool.getConnection();
-        const rows = await conn.query("SELECT 1 as test");
-        conn.release();
-        res.json({ success: true, message: "Database connected!",data: rows });   
-    } catch (error) {
-        console.error("Database connection error:", error);
-        res.status(500).json({ success: false, message: "Database connection failed!" , error});
-        
-    }
-})
 
 
 // Start the server

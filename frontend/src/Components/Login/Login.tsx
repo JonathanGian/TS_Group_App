@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Contexts/AuthContext";
-import { sliderClasses } from "@mui/material";
+
+
 const Login = () => {
   // Added states for username, email, and password
   const [email, setEmail] = useState("");
@@ -12,12 +13,22 @@ const Login = () => {
   const navigate = useNavigate();
   const { loggedIn, login, logout } = useAuth();
   // Check if the user is already logged in
-login();
 
- console.log("Logged in status:", loggedIn);
-  if (loggedIn) {
-    navigate("/upload-emails");
-  }
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      // If the user is already logged in, redirect them.
+      navigate("/", { replace: true });
+    }
+  }, [navigate]);
+  useEffect(() => {
+    if (email === "test"){
+      
+    }
+  })
+
   // Login function now sends email and password to the backend
 
   const handleLogin = async () => {

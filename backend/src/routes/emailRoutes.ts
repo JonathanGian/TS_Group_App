@@ -36,86 +36,185 @@ const upload = multer({ dest: "uploads/" });
  * For .txt files, each line is expected to to be an email.
  * For .csv files, emails are expected to be comm and/or newline seperated.
  */
-router.post("/upload-emails", verifyToken, upload.single('file'), async (req, res) => {
+router.post(
+  "/upload-emails",
+  verifyToken,
+  upload.single("file"),
+  async (req, res) => {
     try {
-        let emails: string[] = [];
-        
+      let emails: string[] = [];
 
-            if (req.file) {
-            // Read and process the uploaded file
-            // Read and process the uploaded file
-            const filePath = req.file.path;
-            const fileExtension = path.extname(req.file.originalname).toLowerCase();
-            const fileData = await fs.readFile(filePath, 'utf-8');
-            console.log("Raw file data:", fileData);
+      if (req.file) {
+        // Read and process the uploaded file
+        // Read and process the uploaded file
+        const filePath = req.file.path;
+        const fileExtension = path.extname(req.file.originalname).toLowerCase();
+        const fileData = await fs.readFile(filePath, "utf-8");
+        console.log("Raw file data:", fileData);
 
-            // Remove the temporary file after reading its contents
-            await fs.unlink(filePath);
+        // Remove the temporary file after reading its contents
+        await fs.unlink(filePath);
 
-            if (fileExtension === ".txt") {
-                // Each line in a .txt file is assumed to be an email
-                emails = fileData.split(/\r?\n/).map(email => email.trim()).filter(email => email);
-                
-            } else if (fileExtension === ".csv") {
-                // For .csv files, split by comma or newline to get the email addresses
-                const cleanedData = fileData.replace(/["']/g, '');
-                emails = cleanedData.split(/[\r\n,]+/).map(email => email.trim()).filter(email => email);
-            } else {
-                res.status(400).json({ success: false, message: "Unsupported file type. Please upload a .txt or .csv file." });
-                return;
-            }
-        } else if (req.body.email) {
-            // Process a single email provided in the request body
-            emails.push(req.body.email.trim());
+        if (fileExtension === ".txt") {
+          // Each line in a .txt file is assumed to be an email
+          emails = fileData
+            .split(/\r?\n/)
+            .map((email) => email.trim())
+            .filter((email) => email);
+        } else if (fileExtension === ".csv") {
+          // For .csv files, split by comma or newline to get the email addresses
+          const cleanedData = fileData.replace(/["']/g, "");
+          emails = cleanedData
+            .split(/[\r\n,]+/)
+            .map((email) => email.trim())
+            .filter((email) => email);
         } else {
-            res.status(400).json({ success: false, message: "No file or email provided." });
-            return;
+          res
+            .status(400)
+            .json({
+              success: false,
+              message:
+                "Unsupported file type. Please upload a .txt or .csv file.",
+            });
+          return;
         }
-        console.log(emails);
-        if (emails.length === 0) {
-            res.status(400).json({ success: false, message: "No valid email addresses found." });
-            return;
-        }
+      } else if (req.body.email) {
+        // Process a single email provided in the request body
+        emails.push(req.body.email.trim());
+      } else {
+        res
+          .status(400)
+          .json({ success: false, message: "No file or email provided." });
+        return;
+      }
+      console.log(emails);
+      if (emails.length === 0) {
+        res
+          .status(400)
+          .json({ success: false, message: "No valid email addresses found." });
+        return;
+      }
 
       // Assume req.user is set by verifyToken middleware
       const userId = req.user?.id || null;
 
       const conn = await pool.getConnection();
-      // Create a new batch record. If you later need to track file uploads, you can add file_uploads_id.
+      // Create a new batch record.
       const batchResult: any = await conn.query(
         "INSERT INTO email_batches (user_id, created_at) VALUES (?, NOW())",
-        [userId]
+        [userId],
       );
       const batchId = batchResult.insertId;
+      // Update file_uploads_id to equal the batchId.
+      await conn.query(
+        "UPDATE email_batches SET file_uploads_id = ? WHERE id = ?",
+        [batchId, batchId],
+      );
 
       // Insert each email into the emails table with the generated batch ID
       for (const email of emails) {
         await conn.query(
           "INSERT INTO emails (batch_id, email, status) VALUES (?, ?, 'pending')",
-          [batchId, email]
+          [batchId, email],
         );
       }
       conn.release();
 
-      res.json({ success: true, message: `Uploaded and queued ${emails.length} email(s) for verification. Batch ID: ${batchId}` });
+      res.json({
+        success: true,
+        message: `Uploaded and queued ${emails.length} email(s) for verification. Batch ID: ${batchId}`,
+      });
     } catch (error: any) {
       console.error("Error processing uploaded emails:", error);
-      res.status(500).json({ success: false, message: "Failed to process uploaded emails.", error: error.message });
+      res
+        .status(500)
+        .json({
+          success: false,
+          message: "Failed to process uploaded emails.",
+          error: error.message,
+        });
     }
+  },
+);
+
+// DELETE /emails/:emailID
+
+router.delete("/:emailId", verifyToken, async (req, res) => {
+    try {
+        const emailId = parseInt(req.params.emailId, 10);
+        if (isNaN(emailId)) {
+        res.status(400).json({ success: false, message: "Invalid email ID." });
+        return;
+        }
+    
+        const conn = await pool.getConnection();
+        // Delete the email with the specified ID
+        await conn.query("DELETE FROM emails WHERE id = ?", [emailId]);
+        conn.release();
+    
+        res.json({
+        success: true,
+        message: `Email with ID ${emailId} has been deleted.`,
+        });
+    } catch (error: any) {
+        console.error("Error deleting email:", error);
+        res
+        .status(500)
+        .json({
+            success: false,
+            message: "Failed to delete email",
+            error: error.message,
+        });
+    }
+})
+
+// DELETE /emails/batch/:batchID
+
+router.delete("/batch/:batchID", verifyToken, async (req, res) => {
+  try {
+    const batchId = parseInt(req.params.batchID, 10);
+    if (isNaN(batchId)) {
+      res.status(400).json({ success: false, message: "Invalid batch ID." });
+      return;
+    }
+
+    const conn = await pool.getConnection();
+    // Delete emails associated with the batch ID
+    await conn.query("DELETE FROM emails WHERE batch_id = ?", [batchId]);
+    // Delete the batch record itself
+    await conn.query("DELETE FROM email_batches WHERE id = ?", [batchId]);
+    conn.release();
+
+    res.json({
+      success: true,
+      message: `Batch ${batchId} and its emails have been deleted.`,
+    });
+  } catch (error: any) {
+    console.error("Error deleting batch:", error);
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Failed to delete batch",
+        error: error.message,
+      });
+  }
 });
 
 // GET /emails
 
 router.get("/status", verifyToken, async (req, res): Promise<void> => {
-    try {
-      const userId = req.user?.id;
-      if (!userId) {
-        res.status(401).json({ success: false, message: "User not authenticated." });
-        return;
-      }
-  
-      const conn = await pool.getConnection();
-      const query = `
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      res
+        .status(401)
+        .json({ success: false, message: "User not authenticated." });
+      return;
+    }
+
+    const conn = await pool.getConnection();
+    const query = `
         SELECT 
           e.id,
           e.batch_id,
@@ -134,15 +233,21 @@ router.get("/status", verifyToken, async (req, res): Promise<void> => {
         WHERE eb.user_id = ?
         ORDER BY eb.created_at DESC, e.id DESC
       `;
-      const emails = await conn.query(query, [userId]);
-      conn.release();
-  
-      res.json({ success: true, emails });
-    } catch (error: any) {
-      console.error("Error fetching emails:", error);
-      res.status(500).json({ success: false, message: "Failed to fetch emails", error: error.message });
-    }
-  });
+    const emails = await conn.query(query, [userId]);
+    conn.release();
+
+    res.json({ success: true, emails });
+  } catch (error: any) {
+    console.error("Error fetching emails:", error);
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Failed to fetch emails",
+        error: error.message,
+      });
+  }
+});
 
 // FETCH RESULTS OF PENDING EMAILS/ VERIFY EMAILS FROM TABLE
 router.get("/fetch-results", verifyToken, async (req, res) => {
@@ -184,27 +289,29 @@ router.get("/fetch-results", verifyToken, async (req, res) => {
         const disposable = Boolean(data.disposable);
         const spamtrap = Boolean(data.spamtrap);
         if (data.success === false) {
-            console.warn(`SnapValid replied with success=false for ${email}: ${message}`);
-            await conn.query(
-                "UPDATE emails SET result = ?, message = ?, accept_all = ?, role = ?, free_email = ?, disposable = ?, spamtrap = ?, status = 'verified' WHERE email = ?",
-                [
-                  result,
-                  message,
-                  acceptAll,
-                  role,
-                  freeEmail,
-                  disposable,
-                  spamtrap,
-                  email,
-                ],
-              );
-              continue; // Skip updating other fields
+          console.warn(
+            `SnapValid replied with success=false for ${email}: ${message}`,
+          );
+          await conn.query(
+            "UPDATE emails SET result = ?, message = ?, accept_all = ?, role = ?, free_email = ?, disposable = ?, spamtrap = ?, status = 'verified' WHERE email = ?",
+            [
+              result,
+              message,
+              acceptAll,
+              role,
+              freeEmail,
+              disposable,
+              spamtrap,
+              email,
+            ],
+          );
+          continue; // Skip updating other fields
         }
         if (!data.success) {
           console.warn(`SnapValid could not validate ${email}: ${message}`);
           await conn.query(
             "UPDATE emails SET result = ?, message = ?, accept_all = 0, role = 0, free_email = 0, disposable = 0, spamtrap = 0, status = 'error' WHERE email = ?",
-            [result, message, email]
+            [result, message, email],
           );
           continue; // Skip updating other fields
         }
@@ -243,13 +350,11 @@ router.get("/fetch-results", verifyToken, async (req, res) => {
     });
   } catch (error: any) {
     console.error("Error fetching results:", error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Failed to fetch validation results",
-        error: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch validation results",
+      error: error.message,
+    });
   }
 });
 

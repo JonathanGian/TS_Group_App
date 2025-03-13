@@ -6,6 +6,13 @@ import { Request, Response } from "express";
 
 const router = express.Router();
 
+// Validate Token
+router.get("/validate-token", verifyToken, (req: Request, res: Response) => {
+  const authReq = req as any; // Cast to `any` to bypass TypeScript's strict typing
+  res.json({ success: true, message: "Token is valid", user: authReq.user });
+}
+);
+
 // User Registration Route
 router.post("/register", async (req: Request, res: Response) => {
   try {
