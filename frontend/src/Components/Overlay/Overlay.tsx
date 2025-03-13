@@ -1,14 +1,9 @@
 import React from "react";
-import EmailValidator from "../EmailValidator/EmailValidator";
-import BulkEmailUploader from "../BulkEmailUploader/BulkEmailUploder";
-import Result from "../Result/Result";
 
 const Overlay = () => {
 	return (
 		<div className="overlay">
-			<EmailValidator />
-			<BulkEmailUploader />
-			<Result />
+			<p>Overlay</p>
 		</div>
 	);
 };
