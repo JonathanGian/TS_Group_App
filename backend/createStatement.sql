@@ -44,8 +44,6 @@ GRANT ALL PRIVILEGES ON user_auth.* TO "dev_admin"@"localhost";
 
 FLUSH PRIVILEGES;
 
-remove from 
-
 /*
 
     Keeping it simple for now, but you can expand this with more fields as needed.
