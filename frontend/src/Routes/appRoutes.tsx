@@ -22,6 +22,7 @@ const routes: RouteObject[] = [
 			</ProtectedRoute>
 		),
 	},
+	
 	{
 		path: "/login",
 		element: (

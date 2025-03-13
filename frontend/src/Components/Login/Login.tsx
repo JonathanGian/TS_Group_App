@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Contexts/AuthContext";
+import { sliderClasses } from "@mui/material";
 const Login = () => {
   // Added states for username, email, and password
   const [email, setEmail] = useState("");
@@ -11,8 +12,9 @@ const Login = () => {
   const navigate = useNavigate();
   const { loggedIn, login, logout } = useAuth();
   // Check if the user is already logged in
+login();
 
-  logout();
+ console.log("Logged in status:", loggedIn);
   if (loggedIn) {
     navigate("/upload-emails");
   }
