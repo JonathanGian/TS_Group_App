@@ -10,9 +10,7 @@ function App() {
 
 	return (
 		<AuthProvider>
-			<ValidationProvider>
-				<RouterProvider router={router} />
-			</ValidationProvider>
+			<RouterProvider router={router} />
 		</AuthProvider>
 	);
 }
