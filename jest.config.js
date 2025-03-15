@@ -16,6 +16,7 @@ module.exports = {
 	moduleNameMapper: {
 		"\\.(css|less|scss|sass)$": "identity-obj-proxy",
 	},
+	setupFiles: ["<rootDir>/jest.polyfills.js"],
 	setupFilesAfterEnv: ["<rootDir>/frontend/jest.setup.js"],
 	testMatch: ["**/__tests__/**/*.ts?(x)", "**/?(*.)+(spec|test).ts?(x)"],
 	transformIgnorePatterns: ["/node_modules/(?!@testing-library)"],
