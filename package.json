@@ -1,43 +1,62 @@
 {
-  "name": "ts_group_app",
-  "version": "1.0.0",
-  "main": "eslint.config.js",
-  "scripts": {
-    "install:frontend": "cd frontend && npm install",
-    "install:backend": "cd backend && npm install",
-    "install:all": "concurrently \"npm run install:frontend\" \"npm run install:backend\"",
-    "setup:backend-db": "cd backend && mysql < createStatement.sql",
-    "start:frontend": "cd frontend && npm run dev",
-    "start:backend": "cd backend && npm run dev",
-    "start:all": "concurrently \"npm run start:frontend\" \"npm run start:backend\""
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/JonathanGian/TS_Group_App.git"
-  },
-  "keywords": [],
-  "author": "",
-  "authors": [
-    {
-      "name": "Jonathan Gian",
-      "github": ""
-    },
-    {
-      "name": "Vladimir Beliakov",
-      "github": "https://github.com/Ermegilius"
-    },
-    {
-      "name": "Puja Kumari",
-      "github": "https://github.com/Pujakumari1511"
-    }
-  ],
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/JonathanGian/TS_Group_App/issues"
-  },
-  "homepage": "https://github.com/JonathanGian/TS_Group_App#readme",
-  "description": "",
-  "devDependencies": {
-    "concurrently": "^9.1.2"
-  }
+	"name": "ts_group_app",
+	"version": "1.0.0",
+	"main": "eslint.config.js",
+	"scripts": {
+		"install:frontend": "cd frontend && npm install",
+		"install:backend": "cd backend && npm install",
+		"install:all": "concurrently \"npm run install:frontend\" \"npm run install:backend\"",
+		"setup:backend-db": "cd backend && mysql < createStatement.sql",
+		"start:frontend": "cd frontend && npm run dev",
+		"start:backend": "cd backend && npm run dev",
+		"start:all": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
+		"test": "jest",
+		"test:watch": "jest --watch",
+		"stryker": "stryker run"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/JonathanGian/TS_Group_App.git"
+	},
+	"keywords": [],
+	"author": "",
+	"authors": [
+		{
+			"name": "Jonathan Gian",
+			"github": ""
+		},
+		{
+			"name": "Vladimir Beliakov",
+			"github": "https://github.com/Ermegilius"
+		},
+		{
+			"name": "Puja Kumari",
+			"github": "https://github.com/Pujakumari1511"
+		}
+	],
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/JonathanGian/TS_Group_App/issues"
+	},
+	"homepage": "https://github.com/JonathanGian/TS_Group_App#readme",
+	"description": "",
+	"devDependencies": {
+		"@babel/core": "^7.26.10",
+		"@babel/preset-env": "^7.26.9",
+		"@babel/preset-react": "^7.26.3",
+		"@babel/preset-typescript": "^7.26.0",
+		"@stryker-mutator/core": "^8.7.1",
+		"@stryker-mutator/jest-runner": "^8.7.1",
+		"@stryker-mutator/typescript-checker": "^8.7.1",
+		"@testing-library/jest-dom": "^6.6.3",
+		"@testing-library/react": "^16.2.0",
+		"@testing-library/user-event": "^14.6.1",
+		"@types/jest": "^29.5.14",
+		"babel-jest": "^29.7.0",
+		"concurrently": "^9.1.2",
+		"identity-obj-proxy": "^3.0.0",
+		"jest": "^29.7.0",
+		"jest-environment-jsdom": "^29.7.0",
+		"ts-jest": "^29.2.6"
+	}
 }
