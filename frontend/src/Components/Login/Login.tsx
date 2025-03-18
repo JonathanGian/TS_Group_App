@@ -12,7 +12,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { loggedIn, login, logout } = useAuth();
   // Check if the user is already logged in
-login();
+
 
  console.log("Logged in status:", loggedIn);
   if (loggedIn) {
