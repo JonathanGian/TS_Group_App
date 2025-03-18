@@ -1,12 +1,20 @@
 import React, { useState } from "react";
 import axios from "axios";
+import './UploadEmail.css';
 import Navigation from "../Navigation";
-import "./UploadEmails.css"
+import { Box, Button, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Table } from "@mui/material";
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
 
 const UploadEmails: React.FC = () => {
   const [email, setEmail] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [message, setMessage] = useState("");
+  const [open, setOpen] = React.useState(false);
+
+  const toggleSideBar = (newOpen: boolean) => () => {
+    setOpen(newOpen);
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -44,29 +52,71 @@ const UploadEmails: React.FC = () => {
     }
   };
 
+  const sidebarItems = [
+    {
+      text: "Email Status",
+      icon: <InboxIcon />
+    },
+    {
+      text: "Table",
+      icon: <MailIcon />
+    }
+]
+
+ 
+
   return (
     <>
-    <Navigation />
-    <div>
-   <h1>Upload Emails</h1>
-      <form onSubmit={handleSubmit}>
+      <header className={"header-frontpage"}>
+        <h1 className={"header-h1"}>Email Validation App</h1>
+        <button className={"header-button logout-button "}>Log out</button>
+        <button className={"header-button menu-button"} onClick={toggleSideBar(true)}>Menu</button>
+      </header>
+      <main>
+        {/* sidebar */}
+        <Drawer open={open} onClose={toggleSideBar(false)}>
+          <div>
+            <h2 className={"menu-header"}>MENU</h2>
+          </div>
+          <Box sx={{ width: 250 }} role="presentation" onClick={toggleSideBar(false)}>
+            <List>
+              {sidebarItems.map((item, index) => (
+                  <ListItem key={`sidebarItem-${index}`} disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      {item.icon}
+                    </ListItemIcon>
+                    <ListItemText primary={item.text} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+              
+            </List>
+          </Box>
+        </Drawer>
+      
         
-        <input onChange={(e) => setEmail(e.target.value)}
-        placeholder="Enter email address" />
-              <input
+        {/* <h1>Upload Emails</h1> */}
+        <form onSubmit={handleSubmit}>
+          <div className={"verify-email-container"}>
+            <input onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter email address" />
+            <button className={"verify-email-button"}>Verify email</button>
+          </div>
+          <div className={"verify-email-container"}>
+            <input
                 type="file"
                 id="file"
                 accept=".txt, .csv"
                 onChange={handleFileChange}
-                style={{ width: "100%", padding: "8px" }}
               />
-            <button type="submit">Upload</button>
-            
-      </form>
-      {message && (
-        <p>{message}</p>
-      )}
-    </div>
+            <button className={"verify-email-button"} type="submit">Upload</button>
+          </div>          
+        </form>
+        {message && (
+          <p>{message}</p>
+        )}
+      </main>  
     </>
     
   );

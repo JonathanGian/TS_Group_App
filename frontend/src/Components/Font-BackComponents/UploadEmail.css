@@ -1,0 +1,139 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.header-frontpage {
+    background: linear-gradient(90deg, #e63a57, #a6a4a4); 
+    position: fixed;  
+    top: 0;
+    left: 0;
+    width: 100%; 
+    height: 100px;
+    color: white; 
+    padding: 20px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    z-index: 1000; 
+}
+
+.header-button {
+    background-color: transparent;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid white;
+    font-size: large;
+    color: white;
+    position: absolute;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.header-button:hover {
+    background-color: white;
+    color: #e63a57;
+}
+
+.logout-button {
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.menu-button {
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.menu-header {
+    background: linear-gradient(90deg, #e63a57, #e63a57, #a6a4a4);
+    height: 100px;
+    color: white;
+    text-align: center;
+    padding-top: 35px;
+
+}
+
+.header-h1 {
+    text-align: center;
+    padding: auto;
+}
+
+.bulk-email-status-button {
+    background-color: transparent;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid white;
+    font-size: large;
+    color: white;
+    position: absolute;
+    top: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.verify-email-container {
+    background: linear-gradient(90deg, #d66d7f, #8b8888);
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    align-items: center;
+    width: 700px;
+    height: 200px;
+    border-radius: 20px;
+    margin-bottom: 40px;
+    padding: 20px;
+}
+
+input {
+    height: 50px;
+    width: 320px;
+    border-radius: 10px;
+    border: none;
+    padding-left: 20px;
+    margin-left: 100px;
+    display: block;
+}
+
+.verify-email-button {
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: #f5cccc;
+    cursor: pointer;
+    width: 150px;
+    height: 50px;
+}
+
+.verify-email-button:hover {
+    background-color: #e2bcbc;
+}
+
+
+input[type="file"]::-webkit-file-upload-button {
+    height: 50px; /* Set desired height */
+    width: 200px;
+    background: white;
+    color: #9a9595;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+
+.upload-button {
+    background: #f5cccc;
+    padding: 15px;
+    border-radius: 10px;
+    border: none;
+    font-size: large;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+}
