@@ -1,4 +1,5 @@
 // src/Contexts/AuthContext.tsx
+import axios from "axios";
 import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -11,10 +12,12 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const navigate = useNavigate();
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
+
+  // Check for a token in localStorage on component mount
   useEffect(() => {
+   
     const validateToken = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -34,27 +37,27 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         } else {
           setLoggedIn(false);
           localStorage.removeItem("token");
-          navigate("/login");
+          
         }
       } catch (error) {
         console.error("Token validation failed:", error);
         setLoggedIn(false);
         localStorage.removeItem("token");
-        navigate("/login");
       }
     };
 
     validateToken();
-  }, [navigate]);
+  }, []);
 
   const login = () => {
+    // Perform login logic here (e.g., token verification) and update state
     setLoggedIn(true);
   };
 
   const logout = () => {
-    setLoggedIn(false);
+    // Remove token and update state
     localStorage.removeItem("token");
-    navigate("/login");
+    setLoggedIn(false);
   };
 
   return (
@@ -63,7 +66,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     </AuthContext.Provider>
   );
 };
-
 
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);

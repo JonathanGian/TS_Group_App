@@ -14,45 +14,61 @@ const Login = () => {
   const { loggedIn, login, logout } = useAuth();
   // Check if the user is already logged in
 
-console.log(loggedIn)
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   if (token) {
-  //     // If the user is already logged in, redirect them.
-  //     // navigate("/", { replace: true });
-  //   }
-  // }, []);
+if (loggedIn) {
+    navigate("/upload-emails"); // Redirect to upload page if already logged in
+  }
 
+  // Check token validity on component mount
   useEffect(() => {
-    if (email === "test"){
-      
-    }
-  })
+    const validateToken = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return; // No token, no need to validate
 
-  // Login function now sends email and password to the backend
+      try {
+        const response = await fetch(`${baseUrl}/validate-token`, {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-  const handleLogin = async () => {
-    try {
-      const response = await fetch(`${baseUrl}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await response.json();
-      if (response.ok || data.token) {
-        setMessage("Login successful!");
-        // You can also store the token in localStorage or context for later use
-        localStorage.setItem("token", data.token);
-        login();
-        navigate("/upload-emails");
-      } else {
-        setMessage(data.message || "Login failed. Please try again.");
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          console.log("Token invalid or expired, logging out...");
+          localStorage.removeItem("token");
+          logout();
+        }
+      } catch (error) {
+        console.error("Error validating token:", error);
+        localStorage.removeItem("token");
+        logout();
       }
-    } catch (error) {
-      setMessage("An error occurred during login. Please try again.");
-    } 
-    
-  };
+    };
+
+    validateToken();
+  }, [logout]);
+
+    // Login function
+    const handleLogin = async () => {
+      try {
+        const response = await fetch(`${baseUrl}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await response.json();
+  
+        if (response.ok && data.token) {
+          setMessage("Login successful!");
+          localStorage.setItem("token", data.token);
+          login();
+          navigate("/upload-emails");
+        } else {
+          setMessage(data.message || "Login failed. Please try again.");
+        }
+      } catch (error) {
+        setMessage("An error occurred during login. Please try again.");
+      }
+    };
 
   return (
     <div className="login-container">

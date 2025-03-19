@@ -8,11 +8,12 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { AuthProvider } from "./Contexts/AuthContext.tsx";
+import { BrowserRouter } from "react-router-dom";
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
 		<AuthProvider>
 			<App />
-		</AuthProvider>
+		</AuthProvider>	
 	</StrictMode>
 );

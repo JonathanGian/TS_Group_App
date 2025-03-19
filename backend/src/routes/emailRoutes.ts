@@ -69,13 +69,11 @@ router.post(
             .map((email) => email.trim())
             .filter((email) => email);
         } else {
-          res
-            .status(400)
-            .json({
-              success: false,
-              message:
-                "Unsupported file type. Please upload a .txt or .csv file.",
-            });
+          res.status(400).json({
+            success: false,
+            message:
+              "Unsupported file type. Please upload a .txt or .csv file.",
+          });
           return;
         }
       } else if (req.body.email) {
@@ -126,13 +124,11 @@ router.post(
       });
     } catch (error: any) {
       console.error("Error processing uploaded emails:", error);
-      res
-        .status(500)
-        .json({
-          success: false,
-          message: "Failed to process uploaded emails.",
-          error: error.message,
-        });
+      res.status(500).json({
+        success: false,
+        message: "Failed to process uploaded emails.",
+        error: error.message,
+      });
     }
   },
 );
@@ -140,33 +136,31 @@ router.post(
 // DELETE /emails/:emailID
 
 router.delete("/:emailId", verifyToken, async (req, res) => {
-    try {
-        const emailId = parseInt(req.params.emailId, 10);
-        if (isNaN(emailId)) {
-        res.status(400).json({ success: false, message: "Invalid email ID." });
-        return;
-        }
-    
-        const conn = await pool.getConnection();
-        // Delete the email with the specified ID
-        await conn.query("DELETE FROM emails WHERE id = ?", [emailId]);
-        conn.release();
-    
-        res.json({
-        success: true,
-        message: `Email with ID ${emailId} has been deleted.`,
-        });
-    } catch (error: any) {
-        console.error("Error deleting email:", error);
-        res
-        .status(500)
-        .json({
-            success: false,
-            message: "Failed to delete email",
-            error: error.message,
-        });
+  try {
+    const emailId = parseInt(req.params.emailId, 10);
+    if (isNaN(emailId)) {
+      res.status(400).json({ success: false, message: "Invalid email ID." });
+      return;
     }
-})
+
+    const conn = await pool.getConnection();
+    // Delete the email with the specified ID
+    await conn.query("DELETE FROM emails WHERE id = ?", [emailId]);
+    conn.release();
+
+    res.json({
+      success: true,
+      message: `Email with ID ${emailId} has been deleted.`,
+    });
+  } catch (error: any) {
+    console.error("Error deleting email:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete email",
+      error: error.message,
+    });
+  }
+});
 
 // DELETE /emails/batch/:batchID
 
@@ -191,13 +185,11 @@ router.delete("/batch/:batchID", verifyToken, async (req, res) => {
     });
   } catch (error: any) {
     console.error("Error deleting batch:", error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Failed to delete batch",
-        error: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete batch",
+      error: error.message,
+    });
   }
 });
 
@@ -239,13 +231,37 @@ router.get("/status", verifyToken, async (req, res): Promise<void> => {
     res.json({ success: true, emails });
   } catch (error: any) {
     console.error("Error fetching emails:", error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Failed to fetch emails",
-        error: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch emails",
+      error: error.message,
+    });
+  }
+});
+
+// GET SNAPVALID single validation
+router.get("/verify-email", verifyToken, async (req, res) => {
+  const { email } = req.query;
+  if (!email) {
+    res.status(400).json({ success: false, message: "Email is required" });
+    return;
+  }
+  try {
+    const response = await axios.get(
+      `${SNAPVALID_RESULTS_URL}?apikey=${SNAPVALID_API_KEY}&email=${encodeURIComponent(
+        email as string,
+      )}`,
+    );
+    res.json(response.data);
+    return 
+  } catch (error: any) {
+    console.error("Error verifying email:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to verify email",
+      error: error.message,
+    });
+    
   }
 });
 
