@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Box,
@@ -12,23 +12,9 @@ import {
   Paper,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
+import { FetchEmailsResponse } from "../Types/Email.types";
+import { AxiosResponse } from "axios";
 import { useAuth } from "../Contexts/AuthContext";
-
-interface EmailData {
-  id: number;
-  batch_id: number;
-  email: string;
-  status: string;
-  accept_all: any;
-  role: any;
-  free_email: any;
-  disposable: any;
-  spamtrap: any;
-  result: string;
-  message: string;
-  batch_created_at: string;
-}
 
 const EmailStatus = () => {
   const [data, setData] = useState<EmailData[]>([]);
@@ -36,23 +22,40 @@ const EmailStatus = () => {
   const { loggedIn } = useAuth();
   const token = localStorage.getItem("token");
   useEffect(() => {
-    if(!token) {
+    if (!token) {
       navigate("/login");
     }
     if (!loggedIn) {
       navigate("/login");
     }
   }, [loggedIn, navigate]);
-
+  interface EmailData {
+    id: number;
+    batch_id: number;
+    email: string;
+    status: string;
+    accept_all: boolean;
+    role: boolean;
+    free_email: boolean;
+    disposable: boolean;
+    spamtrap: boolean;
+    result: string;
+    message: string;
+    batch_created_at: string;
+  }
   useEffect(() => {
-    const fetchEmails = async () => {
+    const fetchEmails = async (): Promise<void> => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:5005/api/emails/status", {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const response: AxiosResponse<FetchEmailsResponse> = await axios.get(
+          "http://localhost:5005/api/emails/status",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
+        console.log(response);
         if (response.data.success) {
           setData(response.data.emails);
         } else {
@@ -67,14 +70,17 @@ const EmailStatus = () => {
   }, []);
 
   // Group emails by batch id
-  const groupedEmails = data.reduce<Record<number, EmailData[]>>((acc, email) => {
-    const batchId = email.batch_id;
-    if (!acc[batchId]) {
-      acc[batchId] = [];
-    }
-    acc[batchId].push(email);
-    return acc;
-  }, {});
+  const groupedEmails = data.reduce<Record<number, EmailData[]>>(
+    (acc, email) => {
+      const batchId = email.batch_id;
+      if (!acc[batchId]) {
+        acc[batchId] = [];
+      }
+      acc[batchId].push(email);
+      return acc;
+    },
+    {},
+  );
 
   // Delete a single email
   const deleteEmail = async (emailId: number) => {
@@ -98,7 +104,9 @@ const EmailStatus = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       // Remove all emails in the batch from state
-      setData((prevData) => prevData.filter((email) => email.batch_id !== batchId));
+      setData((prevData) =>
+        prevData.filter((email) => email.batch_id !== batchId),
+      );
     } catch (error) {
       console.error("Error deleting batch", error);
     }
@@ -106,19 +114,17 @@ const EmailStatus = () => {
 
   return (
     <>
-  
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           padding: 2,
-          
+
           backgroundColor: "grey",
-         height: "100vh",
+          height: "100vh",
           overflowY: "auto",
           width: "100%",
-          
         }}
       >
         <Box sx={{ alignSelf: "flex-start", mb: 2 }}>
@@ -162,27 +168,30 @@ const EmailStatus = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {emails.map((email) => (
-                  console.log(email),
-                  <TableRow key={email.id}>
-                    
-                    <TableCell>{email.id}</TableCell>
-                    <TableCell>{email.email}</TableCell>
-                    <TableCell>{email.status}</TableCell>
-                    <TableCell>{email.result}</TableCell>
-                    <TableCell>{email.message}</TableCell>
-                    <TableCell>{email.batch_created_at}</TableCell>
-                    <TableCell>
-                      <Button
-                        variant="outlined"
-                        color="error"
-                        onClick={() => deleteEmail(email.id)}
-                      >
-                        Delete
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {emails.map(
+                  (email) => (
+                    console.log(email),
+                    (
+                      <TableRow key={email.id}>
+                        <TableCell>{email.id}</TableCell>
+                        <TableCell>{email.email}</TableCell>
+                        <TableCell>{email.status}</TableCell>
+                        <TableCell>{email.result}</TableCell>
+                        <TableCell>{email.message}</TableCell>
+                        <TableCell>{email.batch_created_at}</TableCell>
+                        <TableCell>
+                          <Button
+                            variant="outlined"
+                            color="error"
+                            onClick={() => deleteEmail(email.id)}
+                          >
+                            Delete
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  ),
+                )}
               </TableBody>
             </Table>
           </Paper>

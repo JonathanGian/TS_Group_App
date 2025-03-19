@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import  { useState } from "react";
+
 import { Container, TextField, Button, Typography, Box } from "@mui/material";
 import { Link } from "react-router-dom";
 const Register = () => {
@@ -9,7 +9,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const baseUrl = "http://localhost:5005/api"; // Base URL for the backend
-  const navigate = useNavigate();
+
   // Registration sends username, email, and password to the backend
   const handleRegister = async () => {
     try {
@@ -103,48 +103,7 @@ const Register = () => {
       </Box>
     </Container>
 
-/*  Here it is in the original format but wanted to try MUI   
 
-<div className="login-container">
-      <h1>Registration</h1>
-      <div className="form-group">
-        <input
-          className="login-input"
-          placeholder="Username (for registration)"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </div>
-      <div className="form-group">
-        <input
-          className="login-input"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
-      <div className="form-group">
-        <input
-          type="password"
-          className="login-input"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-      <div className="button-group">
-        <button className="register-button" onClick={handleRegister}>
-          Register
-        </button>
-      </div>
-      <p>{message}</p>
-      <p>Please register to continue.</p>
-      <button
-        className="login-button"
-        onClick={() => navigate("/login")}
-      >Back to Login</button>
-      <p>Already have an account? <a href="/login">Login</a> to continue.</p>
-    </div> */
   );
 };
 

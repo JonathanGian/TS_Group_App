@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./UploadEmail.css";
+import "./UploadEmails.css" ;
 import {
   Box,
   Button,
@@ -10,7 +10,6 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Table,
   Typography,
 } from "@mui/material";
 
@@ -23,6 +22,19 @@ interface VerifyEmailResponse {
   success: boolean;
   result: string;
   message?: string;
+}
+interface ValidateEmailsResponse {
+  success: boolean;
+  message: string;
+  data: {
+    email: string;
+    result: string;
+    accept_all: boolean;
+    role: boolean;
+    free_email: boolean;
+    disposable: boolean;
+    spamtrap: boolean;
+  }
 }
 const UploadEmails: React.FC = () => {
   const navigate = useNavigate();
@@ -53,13 +65,8 @@ const UploadEmails: React.FC = () => {
     }
   };
 
-  interface VerifyEmailResponse {
-    success: boolean;
-    result: string;
-    message?: string;
-  }
-  
-  const handleSingleEmailValidation = async () => {
+
+  const handleSingleEmailValidation = async (): Promise<void> => {
     setIsValidatingSingle(true);
     setEmailValidationResult(null);
   
@@ -72,58 +79,32 @@ const UploadEmails: React.FC = () => {
   
     try {
       const token = localStorage.getItem("token");
-      const { data } = await axios.get<VerifyEmailResponse>(
-        `${import.meta.env.VITE_API_BASE_URL}/emails/verify-email`,
+      const { data }: {data:VerifyEmailResponse} = await axios.post(
+        "http://localhost:5005/api/emails/validate-email",
+        { email },
         {
-          params: { email },
           headers: { Authorization: `Bearer ${token}` },
         }
       );
   
-      if (data.success) {
-        const valid = data.result === "valid";
-        setEmailValidationResult(valid ? "Valid Email ✅" : "Invalid Email ❌");
-        setEmailValidationColor(valid ? "green" : "red");
+      if (data.success === true) {
+        setEmailValidationResult(`Result: ${data.result} ✅`);
+        setEmailValidationColor(data.result === "valid" ? "red" : "green");
       } else {
         setEmailValidationResult(data.message || "Validation failed.");
         setEmailValidationColor("red");
       }
-    } catch {
+    } catch (error) {
+      console.error("Error validating email:", error);
       setEmailValidationResult("Error validating email.");
       setEmailValidationColor("red");
     } finally {
       setIsValidatingSingle(false);
     }
   };
-  // Single Email Validation with Snapvalid API
 
-//   const handleSingleEmailValidation = async () => {
-//     setIsValidatingSingle(true); // Start validating
-//     setEmailValidationResult(null); // Clear previous result
 
-//     if (!email.trim()) {
-//       setEmailValidationResult("Please enter an email address.");
-//       setEmailValidationColor("red");
-//       setIsValidatingSingle(false); // Stop validating
-//       return;
-//     }
-
-//     try {
-//       const apiKey = import.meta.env.VITE_SNAPVALID_API_KEY;
-//       const data = await axios.get(
-//         `/api/v1/verify/?apikey=${apiKey}&email=${email}`,
-//       );
-
-//       console.log("API Response:", data);
-  
-
-//     } catch (error) {
-//       console.error("Error validating email:", error);
-//   };
-// }
-
-  // This function handles the file upload and sends it to the backend.
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent):Promise<void> => {
     e.preventDefault();
 
     const formData = new FormData();
@@ -133,7 +114,7 @@ const UploadEmails: React.FC = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post(
+      const response= await axios.post<ValidateEmailsResponse>(
         "http://localhost:5005/api/emails/upload-emails",
         formData,
         {
@@ -143,12 +124,15 @@ const UploadEmails: React.FC = () => {
           },
         },
       );
+      console.log("API Response:", response.data);
       setMessage(response.data.message);
     } catch (error: any) {
       console.error("Error uploading emails:", error);
       setMessage("Error uploading emails");
     }
   };
+
+
   // Bulk Email Validation
   // This function handles the validation of all emails in the database.
   const handleValidation = async () => {
@@ -157,7 +141,7 @@ const UploadEmails: React.FC = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(
+      const response = await axios.get<ValidateEmailsResponse>(
         "http://localhost:5005/api/emails/fetch-results",
         {
           headers: { Authorization: `Bearer ${token}` },
