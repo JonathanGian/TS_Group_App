@@ -187,16 +187,19 @@ const handleLogout = () => {
     >
       <MenuIcon />
     </IconButton>
-
+<button className={"logout-button"} onClick={toggleSideBar(true)}>Logout</button>
         <Button
           variant="contained"
           className={"logout-button"}
           onClick={handleLogout}
+          color="error"
           sx={{
             color: "black",
-            backgroundColor: "#f5cccc",
+            backgroundColor: "lightcoral",
             "&:hover": { backgroundColor: "#e2bcbc" },
             textTransform: "none",
+            position: "absolute",
+            right: 20,
           }}
         >
           Logout
