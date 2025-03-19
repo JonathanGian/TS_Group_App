@@ -6,7 +6,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "./Theme/theme";
 import "./App.css";
-import useAuthCheck from "./Hooks/useAuthCheck";
+
 
 function App() {
   const router = createRoutes();
