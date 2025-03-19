@@ -1,5 +1,6 @@
 // src/Contexts/AuthContext.tsx
 import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
   loggedIn: boolean;
@@ -10,25 +11,50 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
-  // Check for a token in localStorage on component mount
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setLoggedIn(true);
-    }
-  }, []);
+    const validateToken = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setLoggedIn(false);
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:5005/api/auth/validate-token", {
+          method: "GET",
+          headers: { "Authorization": `Bearer ${token}` },
+        });
+
+        const data = await response.json();
+        if (response.ok && data.success) {
+          setLoggedIn(true);
+        } else {
+          setLoggedIn(false);
+          localStorage.removeItem("token");
+          navigate("/login");
+        }
+      } catch (error) {
+        console.error("Token validation failed:", error);
+        setLoggedIn(false);
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
+    };
+
+    validateToken();
+  }, [navigate]);
 
   const login = () => {
-    // Perform login logic here (e.g., token verification) and update state
     setLoggedIn(true);
   };
 
   const logout = () => {
-    // Remove token and update state
-    localStorage.removeItem("token");
     setLoggedIn(false);
+    localStorage.removeItem("token");
+    navigate("/login");
   };
 
   return (
@@ -37,6 +63,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     </AuthContext.Provider>
   );
 };
+
 
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
