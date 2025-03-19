@@ -13,12 +13,17 @@ import {
   Table,
   Typography,
 } from "@mui/material";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
+
 import MailIcon from "@mui/icons-material/Mail";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import useAuthCheck from "../../Hooks/useAuthCheck";
+import useAuthCheck from "../Hooks/useAuthCheck";
 import { useNavigate } from "react-router-dom";
 
+interface VerifyEmailResponse {
+  success: boolean;
+  result: string;
+  message?: string;
+}
 const UploadEmails: React.FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -47,49 +52,75 @@ const UploadEmails: React.FC = () => {
       setFile(e.target.files[0]);
     }
   };
-  // Single Email Validation with Snapvalid API
 
+  interface VerifyEmailResponse {
+    success: boolean;
+    result: string;
+    message?: string;
+  }
+  
   const handleSingleEmailValidation = async () => {
-    setIsValidatingSingle(true); // Start validating
-    setEmailValidationResult(null); // Clear previous result
-
+    setIsValidatingSingle(true);
+    setEmailValidationResult(null);
+  
     if (!email.trim()) {
       setEmailValidationResult("Please enter an email address.");
       setEmailValidationColor("red");
-      setIsValidatingSingle(false); // Stop validating
+      setIsValidatingSingle(false);
       return;
     }
-
+  
     try {
-console.time("validate");
-      const apiKey = import.meta.env.VITE_SNAPVALID_API_KEY;
-      console.timeLog("validate", "after Axios")
-      const { data } = await axios.get(
-        `/api/v1/verify/?apikey=${apiKey}&email=${email}`,
+      const token = localStorage.getItem("token");
+      const { data } = await axios.get<VerifyEmailResponse>(
+        `${import.meta.env.VITE_API_BASE_URL}/emails/verify-email`,
+        {
+          params: { email },
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
-
-      console.log("EMAIL:", email);
-      console.log("RESPONSE:", data);
-      if (data.success === true) {
-        const isValid = data.result === "deliverable";
-        setEmailValidationResult(
-          isValid ? "Valid Email ✅" : "Invalid Email ❌",
-        );
-        console.timeLog("validate", "after state")
-        console.timeEnd("validate");
-        setEmailValidationColor(isValid ? "green" : "red");
+  
+      if (data.success) {
+        const valid = data.result === "valid";
+        setEmailValidationResult(valid ? "Valid Email ✅" : "Invalid Email ❌");
+        setEmailValidationColor(valid ? "green" : "red");
       } else {
-        setEmailValidationResult("Validation failed.");
+        setEmailValidationResult(data.message || "Validation failed.");
         setEmailValidationColor("red");
       }
-    } catch (error) {
-      console.error("Error validating email:", error);
+    } catch {
       setEmailValidationResult("Error validating email.");
       setEmailValidationColor("red");
     } finally {
-      setIsValidatingSingle(false); // Stop validating
+      setIsValidatingSingle(false);
     }
   };
+  // Single Email Validation with Snapvalid API
+
+//   const handleSingleEmailValidation = async () => {
+//     setIsValidatingSingle(true); // Start validating
+//     setEmailValidationResult(null); // Clear previous result
+
+//     if (!email.trim()) {
+//       setEmailValidationResult("Please enter an email address.");
+//       setEmailValidationColor("red");
+//       setIsValidatingSingle(false); // Stop validating
+//       return;
+//     }
+
+//     try {
+//       const apiKey = import.meta.env.VITE_SNAPVALID_API_KEY;
+//       const data = await axios.get(
+//         `/api/v1/verify/?apikey=${apiKey}&email=${email}`,
+//       );
+
+//       console.log("API Response:", data);
+  
+
+//     } catch (error) {
+//       console.error("Error validating email:", error);
+//   };
+// }
 
   // This function handles the file upload and sends it to the backend.
   const handleSubmit = async (e: React.FormEvent) => {
@@ -148,6 +179,9 @@ console.time("validate");
 
   return (
     <>
+ 
+ 
+
       <header className={"header-frontpage"}>
         <h1 className={"header-h1"}>Email Validation App</h1>
         <button className={"header-button logout-button "}>Log out</button>
@@ -172,15 +206,7 @@ console.time("validate");
           >
             <List>
               <ListItem disablePadding>
-                <ListItemButton onClick={() => navigate("/email-status")}>
-                  <ListItemIcon>
-                    <InboxIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Email Status" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton onClick={() => navigate("/status")}>
+                <ListItemButton onClick={() => navigate("/email/status")}>
                   <ListItemIcon>
                     <MailIcon />
                   </ListItemIcon>
