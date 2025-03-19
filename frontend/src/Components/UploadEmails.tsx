@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Drawer,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -16,8 +17,8 @@ import {
 import MailIcon from "@mui/icons-material/Mail";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import useAuthCheck from "../Hooks/useAuthCheck";
-import { useNavigate } from "react-router-dom";
-
+import { Navigate, useNavigate } from "react-router-dom";
+import MenuIcon from '@mui/icons-material/Menu';
 interface VerifyEmailResponse {
   success: boolean;
   result: string;
@@ -54,7 +55,13 @@ const UploadEmails: React.FC = () => {
   // It should be called at the top level of the component.
   useAuthCheck();
 
-  
+const handleLogout = () => {
+  localStorage.removeItem("token");
+  navigate("/")
+  //Force refresh to avoid "issues"
+  window.location.reload();
+
+}
   const toggleSideBar = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
@@ -124,7 +131,7 @@ const UploadEmails: React.FC = () => {
           },
         },
       );
-      console.log("API Response:", response.data);
+      
       setMessage(response.data.message);
     } catch (error: any) {
       console.error("Error uploading emails:", error);
@@ -168,13 +175,34 @@ const UploadEmails: React.FC = () => {
 
       <header className={"header-frontpage"}>
         <h1 className={"header-h1"}>Email Validation App</h1>
-        <button className={"header-button logout-button "}>Log out</button>
-        <button
-          className={"header-button menu-button"}
-          onClick={toggleSideBar(true)}
+       
+        <IconButton
+        size="large"
+        title="Menu"
+      edge="start"
+      color="inherit"
+      aria-label="menu"
+      onClick={toggleSideBar(true)}
+    sx={{ color: "black", position: "absolute", left: 45, top: 25 }}
+    >
+      <MenuIcon />
+    </IconButton>
+
+        <Button
+          variant="contained"
+          className={"logout-button"}
+          onClick={handleLogout}
+          sx={{
+            color: "black",
+            backgroundColor: "#f5cccc",
+            "&:hover": { backgroundColor: "#e2bcbc" },
+            textTransform: "none",
+          }}
         >
-          Menu
-        </button>
+          Logout
+        </Button>
+ 
+      
       </header>
       <main>
         {/* sidebar */}

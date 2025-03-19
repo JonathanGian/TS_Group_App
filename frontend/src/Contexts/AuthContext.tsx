@@ -1,7 +1,5 @@
-// src/Contexts/AuthContext.tsx
-import axios from "axios";
 import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+
 
 interface AuthContextType {
   loggedIn: boolean;

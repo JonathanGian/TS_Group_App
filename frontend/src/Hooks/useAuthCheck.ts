@@ -25,9 +25,9 @@ const useAuthCheck = () => {
             headers: headers,
           },
         );
-        console.log(response);
+  
         const data = await response.data;
-        console.log(data);
+ 
         if (response.status !== 200 || !data.success) {
           localStorage.removeItem("token"); // Remove invalid token
           navigate("/login");

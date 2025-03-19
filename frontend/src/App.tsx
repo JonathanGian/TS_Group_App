@@ -1,6 +1,5 @@
 import { RouterProvider } from "react-router-dom";
 import { createRoutes } from "./Routes/appRoutes";
-import React from "react";
 import { AuthProvider } from "./Contexts/AuthContext";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";

@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import { FetchEmailsResponse } from "../Types/Email.types";
 import { AxiosResponse } from "axios";
 import { useAuth } from "../Contexts/AuthContext";
+import { EmailData } from "../Types/Email.types";
+
 
 const EmailStatus = () => {
   const [data, setData] = useState<EmailData[]>([]);
@@ -29,20 +31,8 @@ const EmailStatus = () => {
       navigate("/login");
     }
   }, [loggedIn, navigate]);
-  interface EmailData {
-    id: number;
-    batch_id: number;
-    email: string;
-    status: string;
-    accept_all: boolean;
-    role: boolean;
-    free_email: boolean;
-    disposable: boolean;
-    spamtrap: boolean;
-    result: string;
-    message: string;
-    batch_created_at: string;
-  }
+ 
+  
   useEffect(() => {
     const fetchEmails = async (): Promise<void> => {
       try {
@@ -55,7 +45,7 @@ const EmailStatus = () => {
             },
           },
         );
-        console.log(response);
+       
         if (response.data.success) {
           setData(response.data.emails);
         } else {
@@ -118,15 +108,15 @@ const EmailStatus = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
+          
           padding: 2,
 
           backgroundColor: "grey",
           height: "100vh",
           overflowY: "auto",
-          width: "100%",
+          width: "100vw",
         }}
-      >
+      >{/* Top Button */}
         <Box sx={{ alignSelf: "flex-start", mb: 2 }}>
           <Button
             variant="contained"
@@ -170,7 +160,6 @@ const EmailStatus = () => {
               <TableBody>
                 {emails.map(
                   (email) => (
-                    console.log(email),
                     (
                       <TableRow key={email.id}>
                         <TableCell>{email.id}</TableCell>
