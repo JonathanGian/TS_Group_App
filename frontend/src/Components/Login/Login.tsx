@@ -14,10 +14,13 @@ const Login = () => {
   const { loggedIn, login, logout } = useAuth();
   // Check if the user is already logged in
 
-if (loggedIn) {
-    navigate("/upload-emails"); // Redirect to upload page if already logged in
-  }
+  useEffect(() => {
+    if (loggedIn) {
+      navigate("/upload-emails");
+    }
+  }, [loggedIn, navigate]);
 
+  
   // Check token validity on component mount
   useEffect(() => {
     const validateToken = async () => {
