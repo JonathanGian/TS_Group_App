@@ -43,8 +43,8 @@ const routes: RouteObject[] = [
 		<EmailStatus />
 	</ProtectedRoute>)
   },
+  
 ];
 
-const createRoutes = () => createBrowserRouter(routes);
+export const createRoutes = () => createBrowserRouter(routes);
 
-export default createRoutes;

@@ -1,16 +1,22 @@
 import React, { useState } from "react";
 import axios from "axios";
 import './UploadEmail.css';
-import Navigation from "../Navigation";
+
 import { Box, Button, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Table } from "@mui/material";
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import useAuthCheck from "../../Hooks/useAuthCheck";
 
 const UploadEmails: React.FC = () => {
   const [email, setEmail] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [message, setMessage] = useState("");
   const [open, setOpen] = React.useState(false);
+  
+  // useAuthCheck is a custom hook that checks if the user is authenticated
+  // and redirects them to the login page if not.
+  // It should be called at the top level of the component.
+  useAuthCheck();
 
   const toggleSideBar = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -34,7 +40,7 @@ const UploadEmails: React.FC = () => {
     }
 
     try {
-      const token = localStorage.getItem("token"); // Adjust token retrieval as needed
+      const token = localStorage.getItem("token"); 
       const response = await axios.post(
         "http://localhost:5005/api/emails/upload-emails",
         formData,
@@ -109,7 +115,11 @@ const UploadEmails: React.FC = () => {
                 id="file"
                 accept=".txt, .csv"
                 onChange={handleFileChange}
+                style={{ display: 'none' }}
               />
+            <label htmlFor="file" className="custom-file-label">
+              §
+            </label>
             <button className={"verify-email-button"} type="submit">Upload</button>
           </div>          
         </form>

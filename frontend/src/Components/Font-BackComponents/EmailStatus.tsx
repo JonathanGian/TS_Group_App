@@ -35,6 +35,7 @@ const EmailStatus = () => {
   const navigate = useNavigate();
   const { loggedIn } = useAuth();
   const token = localStorage.getItem("token");
+
   useEffect(() => {
     if(!token) {
       navigate("/login");
@@ -55,7 +56,9 @@ const EmailStatus = () => {
         });
         if (response.data.success) {
           setData(response.data.emails);
-        } else {
+          
+        } 
+        else {
           console.error("Failed to fetch emails", response.data.message);
         }
       } catch (error) {
@@ -106,7 +109,7 @@ const EmailStatus = () => {
 
   return (
     <>
-      <Navigation />
+     <Navigation />
       <Box
         sx={{
           display: "flex",

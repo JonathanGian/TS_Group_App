@@ -14,15 +14,15 @@ const Login = () => {
   const { loggedIn, login, logout } = useAuth();
   // Check if the user is already logged in
 
+console.log(loggedIn)
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   if (token) {
+  //     // If the user is already logged in, redirect them.
+  //     // navigate("/", { replace: true });
+  //   }
+  // }, []);
 
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      // If the user is already logged in, redirect them.
-      navigate("/", { replace: true });
-    }
-  }, [navigate]);
   useEffect(() => {
     if (email === "test"){
       
