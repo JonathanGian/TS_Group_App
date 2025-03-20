@@ -6,11 +6,11 @@ export default defineConfig({
 	plugins: [react()],
 	server: {
 		proxy: {
-			"/api": {
-				target: "https://app.snapvalid.com",
-				changeOrigin: true,
-				secure: false,
-			},
+		  "/verify": {
+			target: "https://app.snapvalid.com/api/v1/verify",
+			changeOrigin: true,
+			rewrite: (path) => path.replace(/^\/verify/, ""),
+		  },
 		},
 	},
 });

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Contexts/AuthContext";
+import { Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
 
 
 const Login = () => {
@@ -14,83 +15,147 @@ const Login = () => {
   const { loggedIn, login, logout } = useAuth();
   // Check if the user is already logged in
 
-
-
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      // If the user is already logged in, redirect them.
-      navigate("/", { replace: true });
+    if (loggedIn) {
+      navigate("/upload-emails");
     }
-  }, [navigate]);
+  }, [loggedIn, navigate]);
+
+  
+  // Check token validity on component mount
   useEffect(() => {
-    if (email === "test"){
-      
-    }
-  })
+    const validateToken = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return; // No token, no need to validate
 
-  // Login function now sends email and password to the backend
+      try {
+        const response = await fetch(`${baseUrl}/validate-token`, {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-  const handleLogin = async () => {
-    try {
-      const response = await fetch(`${baseUrl}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await response.json();
-      if (response.ok || data.token) {
-        setMessage("Login successful!");
-        // You can also store the token in localStorage or context for later use
-        localStorage.setItem("token", data.token);
-        login();
-        navigate("/upload-emails");
-      } else {
-        setMessage(data.message || "Login failed. Please try again.");
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          console.log("Token invalid or expired, logging out...");
+          localStorage.removeItem("token");
+          logout();
+        }
+      } catch (error) {
+        console.error("Error validating token:", error);
+        localStorage.removeItem("token");
+        logout();
       }
-    } catch (error) {
-      setMessage("An error occurred during login. Please try again.");
-    } 
-    
-  };
+    };
+
+    validateToken();
+  }, [logout]);
+
+    // Login function
+    const handleLogin = async () => {
+      try {
+        const response = await fetch(`${baseUrl}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await response.json();
+  
+        if (response.ok && data.token) {
+          setMessage("Login successful!");
+          localStorage.setItem("token", data.token);
+          login();
+          navigate("/upload-emails");
+        } else {
+          setMessage(data.message || "Login failed. Please try again.");
+        }
+      } catch (error) {
+        setMessage("An error occurred during login. Please try again.");
+      }
+    };
 
   return (
-    <div className="login-container">
-      <h1>Login</h1>
-
-      <div className="form-group">
-        <input
-          className="login-input"
-          placeholder="Email"
+    <Box
+    sx={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100vh",
+      width: "100%",
+      backgroundColor: "#fbfafa",
+    }}
+  >
+    <Paper
+      sx={{
+        padding: 4,
+        borderRadius: 2,
+        boxShadow: 3,
+        maxWidth: 400,
+        width: "100%",
+        background: "linear-gradient(90deg, #f1afba, #7b9ba8)"
+      }}
+    >
+      <Typography variant="h4" align="center" gutterBottom>
+        Login
+      </Typography>
+      <Box component="form">
+        <TextField
+          label="Email"
+          variant="outlined"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          fullWidth
+          margin="normal"
+          sx={{ backgroundColor: "#fff", borderRadius: 1 }}
         />
-      </div>
-      <div className="form-group">
-        <input
+        <TextField
+          label="Password"
           type="password"
-          className="login-input"
-          placeholder="Password"
+          variant="outlined"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          fullWidth
+          margin="normal"
+          sx={{ backgroundColor: "#fff", borderRadius: 1 }}
         />
-      </div>
-      <div className="button-group">
-        <button className="login-button" onClick={handleLogin}>
-          Log In
-        </button>
-        <button
-          className="register-button"
-          onClick={() => navigate("/register")}
+        <Grid container spacing={2} sx={{ marginTop: 1 }}>
+          <Grid item xs={6}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleLogin}
+              fullWidth
+            >
+              Log In
+            </Button>
+          </Grid>
+          <Grid item xs={6}>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => navigate("/register")}
+              fullWidth
+            >
+              Register
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
+      {message && (
+        <Typography
+          variant="body2"
+          align="center"
+          color="error"
+          sx={{ marginTop: 2 }}
         >
-          Register
-        </button>
-      </div>
-      <div>
-        <p>Please log in to continue.</p>
-        <p>{message}</p>
-      </div>
-    </div>
+          {message}
+        </Typography>
+      )}
+      <Typography variant="body2" align="center" sx={{ marginTop: 2 }}>
+        Please log in to continue.
+      </Typography>
+    </Paper>
+  </Box>
   );
 };
 

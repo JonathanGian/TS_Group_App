@@ -22,6 +22,8 @@
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedSideEffectImports": true
+
+    
 	},
-	"include": ["frontend/src", "frontend/vite-env.d.ts"]
+	"include": ["frontend/src", "frontend/vite-env.d.ts","src", "vite.config.ts","src/global.d.ts"]
 }

@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import pool from "./database";
+
 import authRoutes from "./routes/authRoutes";
 import emailRoutes from "./routes/emailRoutes";
 

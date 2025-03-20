@@ -7,9 +7,9 @@
     "install:backend": "cd backend && npm install",
     "install:all": "concurrently \"npm run install:frontend\" \"npm run install:backend\"",
     "setup:backend-db": "cd backend && mysql < createStatement.sql",
-    "start:frontend": "cd frontend && npm run dev",
-    "start:backend": "cd backend && npm run dev",
-    "start:all": "concurrently \"npm run start:frontend\" \"npm run start:backend\""
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
   },
   "repository": {
     "type": "git",

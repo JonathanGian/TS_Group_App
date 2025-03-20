@@ -1,8 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Tektur:wght@400..900&display=swap');
+
 body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Tektur, Helvetica, sans-serif;
+}
+h2{
+    font-family: Tektur, Helvetica, sans-serif;
 }
 
 .header-frontpage {
@@ -77,25 +82,26 @@ body {
 }
 
 .verify-email-container {
-    background: linear-gradient(90deg, #d66d7f, #8b8888);
-    display: grid;
-    grid-template-columns: 2fr 1fr;
+    display: flex;
+    justify-content: space-evenly;
     align-items: center;
-    width: 700px;
-    height: 200px;
+    background: linear-gradient(90deg, #d66d7f, #8b8888);
+    max-width: 700px;
+    width: 500px;
+    height: 100px;
     border-radius: 20px;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     padding: 20px;
 }
 
 input {
-    height: 50px;
-    width: 320px;
+    flex: 1;
+    height: 35px;
+    width: 100%;
     border-radius: 10px;
     border: none;
     padding-left: 20px;
-    margin-left: 100px;
-    display: block;
+    margin-right: 20px;
 }
 
 .verify-email-button {
@@ -104,8 +110,8 @@ input {
     border: none;
     background-color: #f5cccc;
     cursor: pointer;
-    width: 150px;
-    height: 50px;
+    max-width: 150px;
+    max-height: 50px;
 }
 
 .verify-email-button:hover {
@@ -113,17 +119,16 @@ input {
 }
 
 
-input[type="file"]::-webkit-file-upload-button {
-    height: 50px; /* Set desired height */
-    width: 200px;
-    background: white;
-    color: #9a9595;
-    border: none;
+input[type="file"] {
+    flex: 1;
     border-radius: 10px;
     padding: 10px;
     cursor: pointer;
-    margin-left: 5px;
+    background: white;
+    color: #9a9595;
+    border: none;
 }
+
 
 
 .upload-button {
@@ -136,4 +141,21 @@ input[type="file"]::-webkit-file-upload-button {
     margin-left: auto;
     margin-right: auto;
     margin-top: 30px;
+}
+
+.submit-button {
+    background-color: #d66d7f;
+ 
+    
+    font-size: large;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    color: white;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    background-color: #c0566e;
 }
