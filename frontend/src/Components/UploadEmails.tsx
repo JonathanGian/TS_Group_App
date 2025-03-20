@@ -187,7 +187,7 @@ const handleLogout = () => {
     >
       <MenuIcon />
     </IconButton>
-<button className={"logout-button"} onClick={toggleSideBar(true)}>Logout</button>
+
         <Button
           variant="contained"
           className={"logout-button"}

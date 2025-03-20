@@ -2,6 +2,7 @@ import  { useEffect, useState } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Contexts/AuthContext";
+import { Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
 
 
 const Login = () => {
@@ -74,42 +75,87 @@ const Login = () => {
     };
 
   return (
-    <div className="login-container">
-      <h1>Login</h1>
-
-      <div className="form-group">
-        <input
-          className="login-input"
-          placeholder="Email"
+    <Box
+    sx={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100vh",
+      width: "100%",
+      backgroundColor: "#fbfafa",
+    }}
+  >
+    <Paper
+      sx={{
+        padding: 4,
+        borderRadius: 2,
+        boxShadow: 3,
+        maxWidth: 400,
+        width: "100%",
+        background: "linear-gradient(90deg, #f1afba, #7b9ba8)"
+      }}
+    >
+      <Typography variant="h4" align="center" gutterBottom>
+        Login
+      </Typography>
+      <Box component="form">
+        <TextField
+          label="Email"
+          variant="outlined"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          fullWidth
+          margin="normal"
+          sx={{ backgroundColor: "#fff", borderRadius: 1 }}
         />
-      </div>
-      <div className="form-group">
-        <input
+        <TextField
+          label="Password"
           type="password"
-          className="login-input"
-          placeholder="Password"
+          variant="outlined"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          fullWidth
+          margin="normal"
+          sx={{ backgroundColor: "#fff", borderRadius: 1 }}
         />
-      </div>
-      <div className="button-group">
-        <button className="login-button" onClick={handleLogin}>
-          Log In
-        </button>
-        <button
-          className="register-button"
-          onClick={() => navigate("/register")}
+        <Grid container spacing={2} sx={{ marginTop: 1 }}>
+          <Grid item xs={6}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleLogin}
+              fullWidth
+            >
+              Log In
+            </Button>
+          </Grid>
+          <Grid item xs={6}>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => navigate("/register")}
+              fullWidth
+            >
+              Register
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
+      {message && (
+        <Typography
+          variant="body2"
+          align="center"
+          color="error"
+          sx={{ marginTop: 2 }}
         >
-          Register
-        </button>
-      </div>
-      <div>
-        <p>Please log in to continue.</p>
-        <p>{message}</p>
-      </div>
-    </div>
+          {message}
+        </Typography>
+      )}
+      <Typography variant="body2" align="center" sx={{ marginTop: 2 }}>
+        Please log in to continue.
+      </Typography>
+    </Paper>
+  </Box>
   );
 };
 
