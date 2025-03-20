@@ -73,8 +73,10 @@ router.post("/login", async (req: Request, res: Response) => {
       res.status(400).json({ success: false, message: "Invalid email or password" });
       return
     }
+    // Generate JWT token(expires in 1 hour)
 
     const token = generateToken(user[0].id);
+    
     conn.release();
     res.status(200).json({ success: true, message: "Login successful", token });
   } catch (error) {
@@ -85,7 +87,7 @@ router.post("/login", async (req: Request, res: Response) => {
 
 // Protected Route Example
 router.get("/protected", verifyToken, (req: Request, res: Response) => {
-  const authReq = req as any; // Cast to `any` to bypass TypeScript's strict typing
+  const authReq = req as any;
   res.json({ success: true, message: "You have accessed a protected route!", user: authReq.user });
 });
 
