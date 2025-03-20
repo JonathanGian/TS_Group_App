@@ -17,7 +17,7 @@ import {
 import MailIcon from "@mui/icons-material/Mail";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import useAuthCheck from "../Hooks/useAuthCheck";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import MenuIcon from '@mui/icons-material/Menu';
 interface VerifyEmailResponse {
   success: boolean;
