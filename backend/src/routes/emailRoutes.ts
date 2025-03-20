@@ -240,28 +240,54 @@ router.get("/status", verifyToken, async (req, res): Promise<void> => {
 });
 
 // GET SNAPVALID single validation
-router.get("/verify-email", verifyToken, async (req, res) => {
-  const { email } = req.query;
-  if (!email) {
-    res.status(400).json({ success: false, message: "Email is required" });
-    return;
-  }
+router.post("/validate-email", verifyToken, async (req, res) => {
   try {
-    const response = await axios.get(
-      `${SNAPVALID_RESULTS_URL}?apikey=${SNAPVALID_API_KEY}&email=${encodeURIComponent(
-        email as string,
-      )}`,
-    );
-    res.json(response.data);
-    return 
+    const { email } = req.body;
+    if (!email) {
+      res
+      .status(400)
+      .json({ success: false, message: "Email is required." });
+      return 
+    }
+
+    console.log(`Validating email: ${email}`);
+
+    const url = `${SNAPVALID_RESULTS_URL}?apikey=${SNAPVALID_API_KEY}&email=${encodeURIComponent(
+      email
+    )}`;
+
+    const response = await axios.get(url);
+
+
+    const data = response.data;
+
+    if (!data.success) {
+      console.warn(`SnapValid validation failed for ${email}: ${data.message}`);
+      res.status(400).json({
+        success: false,
+        message: data.message || "Validation failed.",
+      });
+      return 
+    }
+
+    res.json({
+      success: true,
+      email,
+      result: data.result,
+      message: data.message,
+      acceptAll: data.accept_all,
+      role: data.role,
+      freeEmail: data.free_email,
+      disposable: data.disposable,
+      spamtrap: data.spamtrap,
+    });
   } catch (error: any) {
-    console.error("Error verifying email:", error);
+    console.error("Error validating email:", error.response?.data || error.message);
     res.status(500).json({
       success: false,
-      message: "Failed to verify email",
+      message: "Failed to validate email.",
       error: error.message,
     });
-    
   }
 });
 
